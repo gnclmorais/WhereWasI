@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var hbs = require('hbs');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -22,6 +23,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// register path to partials
+hbs.registerPartials(__dirname + '/views/partials');
 
 app.use('/', routes);
 app.use('/users', users);
