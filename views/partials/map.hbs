@@ -1,6 +1,6 @@
 {{!-- HTML --}}
-<div class="wrapper-map-canvas">
-  <div id="map-canvas"></div>
+<div class="world-map">
+  <div id="world-map-canvas"></div>
 </div>
 
 {{!-- JavaScript --}}
@@ -15,7 +15,7 @@
       draggable: true,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+    var map = new google.maps.Map(document.getElementById("world-map-canvas"), myOptions);
   }
 
   //initialize();

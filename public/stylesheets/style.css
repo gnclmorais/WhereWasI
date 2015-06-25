@@ -8,21 +8,21 @@ body {
 a {
   color: #00b7ff;
 }
-.wrapper-map-canvas {
+.world-map {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
 }
-.wrapper-map-canvas--blur {
+.world-map--blur {
   -webkit-filter: blur(5px);
   -moz-filter: blur(5px);
   -ms-filter: blur(5px);
   -o-filter: blur(5px);
   filter: blur(5px);
 }
-#map-canvas {
+#world-map-canvas {
   position: relative;
 /* Will be set by the Maps API anyway */
   width: 100%;
