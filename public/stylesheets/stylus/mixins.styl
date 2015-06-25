@@ -1,0 +1,9 @@
+vendor(prop, args)
+  -webkit-{prop} args
+  -moz-{prop} args
+  -ms-{prop} args
+  -o-{prop} args
+  {prop} args
+
+filter()
+  vendor('filter', blur(arguments))
