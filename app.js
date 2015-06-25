@@ -1,3 +1,4 @@
+require('dotenv').load();
 var express = require('express');
 var path = require('path');
 var hbs = require('hbs');
@@ -7,7 +8,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var connect = require('./routes/connect');
 
 var app = express();
 
@@ -28,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 hbs.registerPartials(__dirname + '/views/partials');
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/connect', connect);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
