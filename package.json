@@ -27,6 +27,7 @@
     "lodash": "^3.9.3",
     "morgan": "~1.5.3",
     "node-foursquare": "^0.3.0",
+    "request-promise": "^0.4.2",
     "serve-favicon": "~2.2.1",
     "stylus": "0.42.3"
   }

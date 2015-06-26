@@ -33,6 +33,9 @@ app.use('/', routes);
 app.use('/connect', connect);
 app.use('/places', places);
 
+var foursq = require('./routes/_foursquare');
+app.use('/foursquare', foursq);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
