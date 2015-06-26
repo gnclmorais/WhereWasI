@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var connect = require('./routes/connect');
+var places = require('./routes/places');
 
 var app = express();
 
@@ -30,6 +31,7 @@ hbs.registerPartials(__dirname + '/views/partials');
 
 app.use('/', routes);
 app.use('/connect', connect);
+app.use('/places', places);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

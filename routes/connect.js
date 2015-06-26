@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+var _ = require('lodash');
 var Promise = require('bluebird');
 
 var configFoursquare = {
@@ -43,14 +44,32 @@ router.get('/:service/callback', function (req, res, next) {
   switch (service) {
     case 'foursquare':
       // TODO
-      handleFoursquareAuth(req.query.code);
+      fsGetAccessToken(req.query.code)
+        .then(fsGetUser)
+        .then(function (user) {
+          res.status(200).json(user);
+        })
+        .catch(console.error);
+        // .then(function (checkins) {
+        //   var result = checkins.recent || checkins;
+
+        //   // Extract just the cities
+        //   result = result.reduce(function (acc, checkin) {
+        //     var city = _.get(checkin, 'venue.location.city');
+        //     var country = _.get(checkin, 'venue.location.country');
+
+        //     city && country && acc.push(city + ', ' + country);
+
+        //     return acc;
+        //   }, []);
+
+        //   res.send(result);
+        // });
       break;
 
     default:
       // TODO
   }
-
-  res.send('End.');
 });
 
 /**
@@ -58,33 +77,46 @@ router.get('/:service/callback', function (req, res, next) {
  * @param  {[type]} req [description]
  * @return {[type]}     [description]
  */
-function handleFoursquareAuth(code) {
-  new Promise(function (resolve, reject) {
+function fsGetAccessToken(code) {
+  return new Promise(function (resolve, reject) {
     foursquare.getAccessToken({
       code: code
     }, function (error, accessToken) {
-      error ? reject(error) : resolve(accessToken);
-    });
-  }).then(function (token) {
-    // TODO
-    // - Save token somewhere, because "Access tokens do not expire (...)"
-    console.log('Token:', token);
+      if (error) {
+        reject(error);
+        return;
+      }
 
-    foursquare.Checkins.getRecentCheckins({
+      // TODO
+      // Temporary store
+      configFoursquare.accessToken = accessToken;
+      resolve(accessToken);
+    });
+  });
+
+  //return fsAuth(code).catch(console.error);
+  //return fsAuth(code).then(fsGetCheckins).catch(console.error);
+}
+
+
+
+function fsGetUser(token) {
+  return new Promise(function (resolve, reject) {
+    foursquare.Users.getUser('self', token, function (error, user) {
+      error ? reject(error) : resolve(user);
+    });
+  });
+}
+
+function fsGetCheckins(token) {
+  return new Promise(function (resolve, reject) {
+    foursquare.Users.getCheckins('self', {
       //limit: 250,
       limit: 5,
       sort: 'oldestfirst'
     }, token, function (error, checkins) {
-      if (error) {
-        console.error('Error:', error);
-      } else {
-        console.log('Checkins:', checkins);
-      }
+      error ? reject(error) : resolve(checkins);
     });
-
-    return true;
-  }).catch(function (argument) {
-    // TODO
   });
 }
 
