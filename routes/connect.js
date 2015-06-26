@@ -49,6 +49,8 @@ router.get('/:service/callback', function (req, res, next) {
     default:
       // TODO
   }
+
+  res.send('End.');
 });
 
 /**
@@ -57,34 +59,30 @@ router.get('/:service/callback', function (req, res, next) {
  * @return {[type]}     [description]
  */
 function handleFoursquareAuth(code) {
-  // foursquare.getAccessToken({
-  //   code: req.query.code
-  // }, function (error, accessToken) {
-  //   if (error) {
-  //     res.send('An error was thrown: ' + error.message);
-  //   } else {
-  //     // TODO
-  //     // Save the accessToken and redirect.
-  //     console.log('Got access token:', accessToken);
-  //   }
-  // });
-
   new Promise(function (resolve, reject) {
     foursquare.getAccessToken({
       code: code
     }, function (error, accessToken) {
       error ? reject(error) : resolve(accessToken);
-
-      // if (error) {
-      //   reject(error);
-      // } else {
-      //   resolve(accessToken);
-      // }
     });
   }).then(function (token) {
     // TODO
     // - Save token somewhere, because "Access tokens do not expire (...)"
     console.log('Token:', token);
+
+    foursquare.Checkins.getRecentCheckins({
+      //limit: 250,
+      limit: 5,
+      sort: 'oldestfirst'
+    }, token, function (error, checkins) {
+      if (error) {
+        console.error('Error:', error);
+      } else {
+        console.log('Checkins:', checkins);
+      }
+    });
+
+    return true;
   }).catch(function (argument) {
     // TODO
   });
