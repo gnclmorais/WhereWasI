@@ -2,17 +2,48 @@ $header-height = 3em
 $avatar-height = 2em
 $avatar-margin = .5em
 
+$menu-color = lightgrey
+
 .alpha-header
   @extends .content
   width 100%
   height $header-height
   background white
 
+  &--account
+    float right
+    *
+      float left
+
   &--avatar
     height $header-height
     width @height
-    float right
     img
       height $avatar-height
       width @height
       margin $avatar-margin
+
+  &--menu
+    $menu-fifth = $avatar-height / 5
+    height $menu-fifth
+    width $avatar-height
+    background $menu-color
+    margin ($menu-fifth * 2 + $avatar-margin) 0
+    margin-right $avatar-margin
+    position relative
+    border-radius 2px
+    cursor pointer
+    &:before
+    &:after
+      display block
+      content ''
+      height $menu-fifth
+      width 100%
+      position absolute
+      left 0
+      background @background
+      border-radius @border-radius
+    &:before
+      top -2 * $menu-fifth
+    &:after
+      bottom -2 * $menu-fifth

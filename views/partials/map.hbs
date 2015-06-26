@@ -13,6 +13,12 @@
       minZoom: 2,
       center: latlng,
       draggable: true,
+      panControl: false,
+      streetViewControl: false,
+      //zoomControl: true,
+      zoomControlOptions: {
+          position: google.maps.ControlPosition.LEFT_BOTTOM
+      },
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(document.getElementById("world-map-canvas"), myOptions);

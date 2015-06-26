@@ -22,15 +22,47 @@ a {
   height: 3em;
   background: #fff;
 }
+.alpha-header--account {
+  float: right;
+}
+.alpha-header--account * {
+  float: left;
+}
 .alpha-header--avatar {
   height: 3em;
   width: 3em;
-  float: right;
 }
 .alpha-header--avatar img {
   height: 2em;
   width: 2em;
   margin: 0.5em;
+}
+.alpha-header--menu {
+  height: 0.4em;
+  width: 2em;
+  background: #d3d3d3;
+  margin: 1.3em 0;
+  margin-right: 0.5em;
+  position: relative;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.alpha-header--menu:before,
+.alpha-header--menu:after {
+  display: block;
+  content: '';
+  height: 0.4em;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  background: #d3d3d3;
+  border-radius: 2px;
+}
+.alpha-header--menu:before {
+  top: -0.8em;
+}
+.alpha-header--menu:after {
+  bottom: -0.8em;
 }
 .world-map {
   position: fixed;

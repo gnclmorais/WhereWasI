@@ -19,8 +19,32 @@
     }
   });
 
+  var Menu = React.createClass({
+    render: function () {
+      var classString = headerClass + '--menu';
+
+      return (
+        <div className={classString}>
+        </div>
+      );
+    }
+  });
+
+  var Header = React.createClass({
+    render: function () {
+      var classString = headerClass + '--account';
+
+      return (
+        <div className={classString}>
+          <Avatar src="https://avatars2.githubusercontent.com/u/385232"/>
+          <Menu />
+        </div>
+      );
+    }
+  });
+
   React.render(
-    <Avatar src="https://avatars2.githubusercontent.com/u/385232"/>,
+    <Header />,
     document.getElementById('alpha-header')
   );
 </script>
