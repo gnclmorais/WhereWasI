@@ -1,4 +1,18 @@
+$header-height = 3em
+$avatar-height = 2em
+$avatar-margin = .5em
+
 .alpha-header
+  @extends .content
   width 100%
-  height 3em
+  height $header-height
   background white
+
+  &--avatar
+    height $header-height
+    width @height
+    float right
+    img
+      height $avatar-height
+      width @height
+      margin $avatar-margin

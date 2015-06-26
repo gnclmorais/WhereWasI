@@ -1,5 +1,6 @@
 html,
-.content {
+.content,
+.alpha-header {
   width: 100%;
   height: 100%;
 }
@@ -8,16 +9,28 @@ body {
   margin: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-.content {
+.content,
+.alpha-header {
   position: relative;
   z-index: 1;
 }
 a {
   color: #00b7ff;
 }
-header {
+.alpha-header {
   width: 100%;
   height: 3em;
+  background: #fff;
+}
+.alpha-header--avatar {
+  height: 3em;
+  width: 3em;
+  float: right;
+}
+.alpha-header--avatar img {
+  height: 2em;
+  width: 2em;
+  margin: 0.5em;
 }
 .world-map {
   position: fixed;

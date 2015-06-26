@@ -1,9 +1,28 @@
-<script>
+<script type="text/jsx">
   window.onload = function (e) {
     // Remove blur
     var mapWrapper = document.getElementsByClassName('world-map');
     mapWrapper[0].className = 'world-map';
   };
+
+  var headerClass = 'alpha-header';
+
+  var Avatar = React.createClass({
+    render: function () {
+      var classString = headerClass + '--avatar';
+
+      return (
+        <div className={classString}>
+          <img src={this.props.src}/>
+        </div>
+      );
+    }
+  });
+
+  React.render(
+    <Avatar src="https://avatars2.githubusercontent.com/u/385232"/>,
+    document.getElementById('alpha-header')
+  );
 </script>
 
-<header class="alpha-header"></header>
+<header id="alpha-header" class="alpha-header"></header>
