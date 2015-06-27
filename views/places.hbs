@@ -3,6 +3,16 @@
     // Remove blur
     var mapWrapper = document.getElementsByClassName('world-map');
     mapWrapper[0].className = 'world-map';
+
+    // Request cities
+    // TODO
+    $.getJSON('/foursquare/cities', function (cities) {
+      cities = cities.cities || cities;
+
+      for (var city in cities) {
+        // TODO
+      }
+    })
   };
 
   var headerClass = 'alpha-header';
@@ -34,8 +44,8 @@
   var Account = React.createClass({
     getInitialState: function() {
       return {
-        msg: 'Welcome!',
-        src: 'https://avatars2.githubusercontent.com/u/385232'
+        msg: 'Loading...',
+        src: ''
       };
     },
     componentDidMount: function () {

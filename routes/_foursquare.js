@@ -57,7 +57,12 @@ router.get('/user', function (req, res, next) {
     })
 });
 
-router.get('/places', function (req, res, next) {
+router.get('/cities', function (req, res, next) {
+  getPlaces(configFoursquare.accessToken)
+    .then(placesToCities)
+    .then(function (places) {
+      res.json(places);
+    });
 });
 
 
@@ -108,8 +113,41 @@ function getUser(accessToken) {
   });
 }
 
-function getPlaces() {
-  // TODO
+function getPlaces(accessToken) {
+  return new Promise(function (resolve, reject) {
+    foursquare.Users.getCheckins('self', {
+      //limit: 250,
+      limit: 5,
+      sort: 'oldestfirst'
+    }, accessToken, function (error, checkins) {
+      error ? reject(error) : resolve(checkins);
+    });
+  });
+}
+
+/**
+ * Crunches checkins into an object of city + country as keys and the number
+ * of checkins as value.
+ * @param  {[type]} places [description]
+ * @return {[type]}        [description]
+ */
+function placesToCities(places) {
+  places = _.get(places, 'checkins.items') || places;
+
+  return new Promise(function (resolve, reject) {
+    resolve(places.reduce(function (cities, checkin) {
+      var city = _.get(checkin, 'venue.location.city');
+      var country = _.get(checkin, 'venue.location.country');
+
+      if (city && country) {
+        var place = city + ', ' + country;
+        var count = cities[place] || 0;
+        cities[place] = count + 1;
+      }
+
+      return cities;
+    }, {}));
+  });
 }
 
 module.exports = router;
