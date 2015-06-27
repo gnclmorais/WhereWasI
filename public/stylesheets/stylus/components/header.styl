@@ -10,14 +10,19 @@ $menu-color = lightgrey
   height $header-height
   background white
 
-  &--account
-    float right
-    *
-      float left
+  &--right
+    position absolute
+    right 0
+
+  &--account > *
+    float left
 
   &--avatar
     height $header-height
-    width @height
+    *
+      float left
+    span
+      line-height $header-height
     img
       height $avatar-height
       width @height

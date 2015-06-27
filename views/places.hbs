@@ -13,6 +13,7 @@
 
       return (
         <div className={classString}>
+          <span>{this.props.msg}</span>
           <img src={this.props.src}/>
         </div>
       );
@@ -30,13 +31,35 @@
     }
   });
 
-  var Header = React.createClass({
+  var Account = React.createClass({
+    getInitialState: function() {
+      return {
+        msg: 'Welcome!',
+        src: 'https://avatars2.githubusercontent.com/u/385232'
+      };
+    },
+    componentDidMount: function () {
+      var size = '100x100'
+      $.getJSON(this.props.endpoint, function (user) {
+        user = user.user || user;
+        console.log(user);
+
+        if (this.isMounted()) {
+          var msg = 'Welcome, ' + user.firstName + '!';
+          var src = user.photo.prefix + size + user.photo.suffix
+          this.setState({
+            msg: msg,
+            src: src
+          });
+        }
+      }.bind(this));
+    },
     render: function () {
       var classString = headerClass + '--account';
 
       return (
         <div className={classString}>
-          <Avatar src="https://avatars2.githubusercontent.com/u/385232"/>
+          <Avatar msg={this.state.msg} src={this.state.src} />
           <Menu />
         </div>
       );
@@ -44,9 +67,11 @@
   });
 
   React.render(
-    <Header />,
-    document.getElementById('alpha-header')
+    <Account endpoint="/foursquare/user" />,
+    document.getElementById('header-wrapper-right')
   );
 </script>
 
-<header id="alpha-header" class="alpha-header"></header>
+<header id="alpha-header" class="alpha-header">
+  <div id="header-wrapper-right" class="alpha-header--right"></div>
+</header>

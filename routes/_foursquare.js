@@ -50,6 +50,11 @@ router.get('/callback', function (req, res, next) {
 });
 
 router.get('/user', function (req, res, next) {
+  // TODO
+  getUser(configFoursquare.accessToken)
+    .then(function (user) {
+      res.json(user);
+    })
 });
 
 router.get('/places', function (req, res, next) {

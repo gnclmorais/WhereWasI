@@ -22,15 +22,21 @@ a {
   height: 3em;
   background: #fff;
 }
-.alpha-header--account {
-  float: right;
+.alpha-header--right {
+  position: absolute;
+  right: 0;
 }
-.alpha-header--account * {
+.alpha-header--account > * {
   float: left;
 }
 .alpha-header--avatar {
   height: 3em;
-  width: 3em;
+}
+.alpha-header--avatar * {
+  float: left;
+}
+.alpha-header--avatar span {
+  line-height: 3em;
 }
 .alpha-header--avatar img {
   height: 2em;
