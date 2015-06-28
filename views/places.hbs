@@ -5,14 +5,31 @@
     mapWrapper[0].className = 'world-map';
 
     // Request cities
-    // TODO
     $.getJSON('/foursquare/cities', function (cities) {
       cities = cities.cities || cities;
+      console.log(cities);
 
+      // TODO
       for (var city in cities) {
-        // TODO
+        codeAddress(city.replace(/ /g, '+'))
       }
-    })
+    });
+
+    function codeAddress(address) {
+      geocoder.geocode({
+        'address': address
+      }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          //map.setCenter(results[0].geometry.location);
+          var marker = new google.maps.Marker({
+              map: map,
+              position: results[0].geometry.location
+          });
+        } else {
+          alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    }
   };
 
   var headerClass = 'alpha-header';

@@ -21,7 +21,10 @@
       },
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    var map = new google.maps.Map(document.getElementById("world-map-canvas"), myOptions);
+    // TODO - Improve this
+    // Make it global
+    map = new google.maps.Map(document.getElementById("world-map-canvas"), myOptions);
+    geocoder = new google.maps.Geocoder();
   }
 
   google.maps.event.addDomListener(window, 'load', initialize);
