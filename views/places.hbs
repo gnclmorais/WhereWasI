@@ -5,30 +5,49 @@
     mapWrapper[0].className = 'world-map';
 
     // Request cities
-    $.getJSON('/foursquare/cities', function (cities) {
+    var geocoded = {};
+    $.getJSON('/foursquare/places', function (cities) {
       cities = cities.cities || cities;
       console.log(cities);
 
       // TODO
+      var markers = [];
       for (var city in cities) {
-        codeAddress(city.replace(/ /g, '+'))
+        city = cities[city];
+        if (city.lat && city.lng) {
+          placeMarker(new google.maps.LatLng(city.lat, city.lng), markers);
+        } else {
+          console.log('Couldn’t find ' + city.name);
+        }
       }
+
+      mc = new MarkerClusterer(map, markers);
     });
 
-    function codeAddress(address) {
-      geocoder.geocode({
-        'address': address
-      }, function (results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-          //map.setCenter(results[0].geometry.location);
-          var marker = new google.maps.Marker({
-              map: map,
-              position: results[0].geometry.location
-          });
-        } else {
-          alert('Geocode was not successful for the following reason: ' + status);
-        }
+    function placeMarker(latandlong, arr) {
+      var marker = new google.maps.Marker({
+          //map: map,
+          position: latandlong
       });
+
+      arr && arr.push(marker);
+    }
+
+    function codeAddress(address) {
+      if (!geocoded[address]) {
+        geocoder.geocode({
+          'address': address
+        }, function (results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            geocoded[address] = results[0].geometry.location;
+            placeMarker(geocoded[address]);
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      } else {
+        placeMarker(geocoded[address]);
+      }
     }
   };
 
