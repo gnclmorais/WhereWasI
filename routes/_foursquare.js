@@ -71,7 +71,8 @@ router.get('/places', function (req, res, next) {
   var limit = query.limit;
   var offset = query.offset;
 
-  getPlaces(configFoursquare.accessToken)
+  //getPlaces(configFoursquare.accessToken, limit, offset, sort)
+  getAllPlaces(configFoursquare.accessToken, limit, sort)
     //.then(placesToPlaces)
     .then(function (places) {
       res.json(places);
@@ -143,14 +144,49 @@ function getPlaces(accessToken, limit, offset, sort) {
   });
 }
 
-// function getAllPlaces(accessToken, limit, offset, sort) {
-//   function* getChunk() {
-//     var index = 0;
-//     while (index <= 2) {
-//       yield index++;
-//     }
-//   }
-// }
+function getAllPlaces(accessToken, limit, sort) {
+  limit = limit || 250;
+  sort = sort || 'oldestfirst';
+
+  var offset = 0;
+  var createRequest = function (lmt, srt, off) {
+    return new Promise(function (resolve, reject) {
+      foursquare.Users.getCheckins('self', {
+        sort:   srt,
+        limit:  lmt,
+        offset: off
+      }, accessToken, function (error, checkins) {
+        error ? reject(error) : resolve(checkins);
+      });
+    });
+  };
+
+  var firstChunk;
+  return createRequest(limit, sort, offset)
+    .then(function (checkins) {
+      checkins = checkins.checkins || checkins;
+      firstChunk = checkins;
+
+      var count = checkins.count || 0;
+      var further = [];
+
+      while ((count -= limit) > 0) {
+        further.push(createRequest(limit, sort, offset += limit));
+      }
+
+      return Promise.all(further);
+    })
+    .then(function (moreCheckins) {
+      return moreCheckins.reduce(function (acc, chunk) {
+        chunk = chunk.checkins || chunk;
+
+        acc.items = acc.items.concat(chunk.items);
+
+        return acc;
+      }, firstChunk);
+    })
+    .then(placesToPlaces);
+}
 
 /**
  * Crunches checkins into an object of city + country as keys and the number
@@ -178,7 +214,7 @@ function placesToCities(places) {
 }
 
 function placesToPlaces(venues) {
-  venues = _.get(venues, 'checkins.items') || venues;
+  venues = _.get(venues, 'items') || venues;
 
   return new Promise(function (resolve, reject) {
     resolve(venues.reduce(function (places, checkin) {

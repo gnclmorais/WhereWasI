@@ -9,7 +9,7 @@
     $.getJSON('/foursquare/places', function (cities) {
       console.log(cities);
 
-      cities = cities.cities || cities;
+      cities = cities.cities || cities.items || cities;
 
       // TODO
       var markers = [];
