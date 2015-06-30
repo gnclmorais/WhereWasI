@@ -66,8 +66,13 @@ router.get('/cities', function (req, res, next) {
 });
 
 router.get('/places', function (req, res, next) {
+  var query = req.query;
+  var sort = query.sort;
+  var limit = query.limit;
+  var offset = query.offset;
+
   getPlaces(configFoursquare.accessToken)
-    .then(placesToPlaces)
+    //.then(placesToPlaces)
     .then(function (places) {
       res.json(places);
     });
@@ -121,17 +126,31 @@ function getUser(accessToken) {
   });
 }
 
-function getPlaces(accessToken) {
+/**
+ * https://developer.foursquare.com/docs/users/checkins
+ * @param  {[type]} accessToken [description]
+ * @return {[type]}             [description]
+ */
+function getPlaces(accessToken, limit, offset, sort) {
   return new Promise(function (resolve, reject) {
     foursquare.Users.getCheckins('self', {
-      limit: 250,
-      //limit: 5,
-      //sort: 'oldestfirst'
+      sort:   sort || 'oldestfirst',
+      limit:  limit || 250,
+      offset: offset || 0
     }, accessToken, function (error, checkins) {
       error ? reject(error) : resolve(checkins);
     });
   });
 }
+
+// function getAllPlaces(accessToken, limit, offset, sort) {
+//   function* getChunk() {
+//     var index = 0;
+//     while (index <= 2) {
+//       yield index++;
+//     }
+//   }
+// }
 
 /**
  * Crunches checkins into an object of city + country as keys and the number

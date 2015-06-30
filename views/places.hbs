@@ -7,8 +7,9 @@
     // Request cities
     var geocoded = {};
     $.getJSON('/foursquare/places', function (cities) {
-      cities = cities.cities || cities;
       console.log(cities);
+
+      cities = cities.cities || cities;
 
       // TODO
       var markers = [];
@@ -88,7 +89,6 @@
       var size = '100x100'
       $.getJSON(this.props.endpoint, function (user) {
         user = user.user || user;
-        console.log(user);
 
         if (this.isMounted()) {
           var msg = 'Welcome, ' + user.firstName + '!';
