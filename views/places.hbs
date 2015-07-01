@@ -4,34 +4,26 @@
     var mapWrapper = document.getElementsByClassName('world-map');
     mapWrapper[0].className = 'world-map';
 
-    // Request cities
+    // Request places
     var geocoded = {};
-    $.getJSON('/foursquare/places', function (cities) {
-      console.log(cities);
+    $.getJSON('/foursquare/places', function (places) {
+      // TODO Remove this
+      places = places.cities || places.items || places;
 
-      cities = cities.cities || cities.items || cities;
-
-      // TODO
-      var markers = [];
-      for (var city in cities) {
-        city = cities[city];
-        if (city.lat && city.lng) {
-          placeMarker(new google.maps.LatLng(city.lat, city.lng), markers);
-        } else {
-          console.log('Couldn’t find ' + city.name);
-        }
-      }
+      var markers = $.map(places, function (info, name) {
+        return new google.maps.Marker({
+            position: new google.maps.LatLng(info.lat, info.lng)
+        });
+      });
 
       mc = new MarkerClusterer(map, markers);
     });
 
-    function placeMarker(latandlong, arr) {
-      var marker = new google.maps.Marker({
+    function placeMarker(latandlong) {
+      return new google.maps.Marker({
           //map: map,
           position: latandlong
       });
-
-      arr && arr.push(marker);
     }
 
     function codeAddress(address) {
