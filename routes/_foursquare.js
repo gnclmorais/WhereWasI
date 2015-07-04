@@ -148,19 +148,53 @@ function getAllPlaces(accessToken, limit, sort) {
   limit = limit || 250;
   sort = sort || 'oldestfirst';
 
-  var offset = 0;
+  //var offset = 0;
   var createRequest = function (lmt, srt, off) {
     return new Promise(function (resolve, reject) {
       foursquare.Users.getCheckins('self', {
         sort:   srt,
         limit:  lmt,
-        offset: off
+        offset: off || 0
       }, accessToken, function (error, checkins) {
         error ? reject(error) : resolve(checkins);
       });
     });
   };
 
+  return createRequest(limit, sort)
+    .then(function (firstChunk) {
+      var count = _.get(firstChunk, 'checkins.count', 0);
+      if (count < limit) {
+        return new Promise([firstChunk]);
+      }
+
+      var nrRequests = Array.apply(null, Array(Math.floor(count / limit)));
+      var gets = [firstChunk].concat(nrRequests.map(function (val, idx) {
+        return createRequest(limit, sort, limit + limit * idx);
+      }));
+
+      return Promise.all(gets);
+    })
+    .then(function (allCheckins) {
+      var path = 'checkins.items';
+      var head = _.first(allCheckins);
+      var rest = _.rest(allCheckins);
+
+      var items = rest.reduce(function (all, chunk) {
+        return all.concat(_.get(chunk, path));
+      }, _.get(head, path, []));
+      _.set(head, path, items);
+
+      return head;
+    })
+    .then(checkinsToPlaces);
+
+
+
+
+
+
+/*
   var firstChunk;
   return createRequest(limit, sort, offset)
     .then(function (checkins) {
@@ -184,6 +218,7 @@ function getAllPlaces(accessToken, limit, sort) {
       return acc;
     }, firstChunk)
     .then(placesToPlaces);
+*/
 }
 
 /**
@@ -209,24 +244,34 @@ function placesToCities(places) {
       return cities;
     }, {}));
   });
-}
+};
 
-function placesToPlaces(venues) {
-  venues = _.get(venues, 'items') || venues;
-
+/**
+ * Morphs a 'Checkins by a user' response from Foursquare into
+ * an object of locations, where the key is the name of the place.
+ * Additional fields added incluce:
+ * - `name` which is the name of the venue
+ * - `checkins` which is the number of checkins in that place
+ * @param  {Object} checkins 'Checkins by a user' type of Foursquare response
+ * @return {Promise}         Promise resolving into an object of venues/places.
+ */
+function checkinsToPlaces(checkins) {
   return new Promise(function (resolve, reject) {
-    resolve(venues.reduce(function (places, checkin) {
-      var name = _.get(checkin, 'venue.name');
-      var location = _.get(checkin, 'venue.location');
+    var places = _.get(checkins, 'checkins.items')
+      .reduce(function (places, checkin) {
+        var name = _.get(checkin, 'venue.name');
+        var location = _.get(checkin, 'venue.location');
 
-      location = places[name] || location;
-      location.name = name;
-      location.checkins = (location.checkins || 0) + 1;
-      places[name] = location;
+        location = _.get(places, name, location);
+        location.name = name;
+        location.checkins = _.get(location, 'checkins', 0) + 1;
+        _.set(places, name, location);
 
-      return places;
-    }, {}));
+        return places;
+      }, {});
+
+    resolve(places);
   });
-}
+};
 
 module.exports = router;

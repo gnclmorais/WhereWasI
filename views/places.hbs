@@ -6,17 +6,22 @@
 
     // Request places
     var geocoded = {};
-    $.getJSON('/foursquare/places', function (places) {
-      // TODO Remove this
-      places = places.cities || places.items || places;
+    $.ajax({
+      url: '/foursquare/places',
+      dataType: 'json',
+      success: function (places) {
+        // TODO Remove this
+        places = places.cities || places.items || places;
 
-      var markers = $.map(places, function (info, name) {
-        return new google.maps.Marker({
-            position: new google.maps.LatLng(info.lat, info.lng)
+        var markers = $.map(places, function (info, name) {
+          return new google.maps.Marker({
+              position: new google.maps.LatLng(info.lat, info.lng)
+          });
         });
-      });
 
-      mc = new MarkerClusterer(map, markers);
+        mc = new MarkerClusterer(map, markers);
+      },
+      error: console.log
     });
 
     function placeMarker(latandlong) {
