@@ -176,15 +176,13 @@ function getAllPlaces(accessToken, limit, sort) {
 
       return Promise.all(further);
     })
-    .then(function (moreCheckins) {
-      return moreCheckins.reduce(function (acc, chunk) {
-        chunk = chunk.checkins || chunk;
+    .reduce(function (acc, chunk) {
+      acc = acc.checkins || acc;
+      chunk = chunk.checkins || chunk;
+      acc.items = acc.items.concat(chunk.items);
 
-        acc.items = acc.items.concat(chunk.items);
-
-        return acc;
-      }, firstChunk);
-    })
+      return acc;
+    }, firstChunk)
     .then(placesToPlaces);
 }
 
