@@ -57,23 +57,13 @@ router.get('/user', function (req, res, next) {
     })
 });
 
-router.get('/cities', function (req, res, next) {
-  getPlaces(configFoursquare.accessToken)
-    .then(placesToCities)
-    .then(function (places) {
-      res.json(places);
-    });
-});
-
 router.get('/places', function (req, res, next) {
   var query = req.query;
   var sort = query.sort;
   var limit = query.limit;
   var offset = query.offset;
 
-  //getPlaces(configFoursquare.accessToken, limit, offset, sort)
   getAllPlaces(configFoursquare.accessToken, limit, sort)
-    //.then(placesToPlaces)
     .then(function (places) {
       res.json(places);
     });
@@ -132,7 +122,7 @@ function getUser(accessToken) {
  * @param  {[type]} accessToken [description]
  * @return {[type]}             [description]
  */
-function getPlaces(accessToken, limit, offset, sort) {
+function getPlaces(accessToken, sort, limit, offset) {
   return new Promise(function (resolve, reject) {
     foursquare.Users.getCheckins('self', {
       sort:   sort || 'oldestfirst',
@@ -148,103 +138,33 @@ function getAllPlaces(accessToken, limit, sort) {
   limit = limit || 250;
   sort = sort || 'oldestfirst';
 
-  //var offset = 0;
-  var createRequest = function (lmt, srt, off) {
-    return new Promise(function (resolve, reject) {
-      foursquare.Users.getCheckins('self', {
-        sort:   srt,
-        limit:  lmt,
-        offset: off || 0
-      }, accessToken, function (error, checkins) {
-        error ? reject(error) : resolve(checkins);
-      });
-    });
-  };
+  var createRequest = getPlaces.bind(null, accessToken, sort, limit);
 
-  return createRequest(limit, sort)
-    .then(function (firstChunk) {
-      var count = _.get(firstChunk, 'checkins.count', 0);
-      if (count < limit) {
-        return new Promise([firstChunk]);
-      }
+  return createRequest().then(function (firstChunk) {
+    var count = _.get(firstChunk, 'checkins.count', 0);
+    if (count < limit) {
+      return new Promise([firstChunk]);
+    }
 
-      var nrRequests = Array.apply(null, Array(Math.floor(count / limit)));
-      var gets = [firstChunk].concat(nrRequests.map(function (val, idx) {
-        return createRequest(limit, sort, limit + limit * idx);
-      }));
+    var nrRequests = Array.apply(null, Array(Math.floor(count / limit)));
+    var gets = [firstChunk].concat(nrRequests.map(function (val, idx) {
+      return createRequest(limit + limit * idx);
+    }));
 
-      return Promise.all(gets);
-    })
-    .then(function (allCheckins) {
-      var path = 'checkins.items';
-      var head = _.first(allCheckins);
-      var rest = _.rest(allCheckins);
+    return Promise.all(gets);
+  }).then(function (allCheckins) {
+    var path = 'checkins.items';
+    var head = _.first(allCheckins);
+    var rest = _.rest(allCheckins);
 
-      var items = rest.reduce(function (all, chunk) {
-        return all.concat(_.get(chunk, path));
-      }, _.get(head, path, []));
-      _.set(head, path, items);
+    var items = rest.reduce(function (all, chunk) {
+      return all.concat(_.get(chunk, path));
+    }, _.get(head, path, []));
+    _.set(head, path, items);
 
-      return head;
-    })
-    .then(checkinsToPlaces);
-
-
-
-
-
-
-/*
-  var firstChunk;
-  return createRequest(limit, sort, offset)
-    .then(function (checkins) {
-      checkins = checkins.checkins || checkins;
-      firstChunk = checkins;
-
-      var count = checkins.count || 0;
-      var further = [];
-
-      while ((count -= limit) > 0) {
-        further.push(createRequest(limit, sort, offset += limit));
-      }
-
-      return Promise.all(further);
-    })
-    .reduce(function (acc, chunk) {
-      acc = acc.checkins || acc;
-      chunk = chunk.checkins || chunk;
-      acc.items = acc.items.concat(chunk.items);
-
-      return acc;
-    }, firstChunk)
-    .then(placesToPlaces);
-*/
+    return head;
+  }).then(checkinsToPlaces);
 }
-
-/**
- * Crunches checkins into an object of city + country as keys and the number
- * of checkins as value.
- * @param  {[type]} places [description]
- * @return {[type]}        [description]
- */
-function placesToCities(places) {
-  places = _.get(places, 'checkins.items') || places;
-
-  return new Promise(function (resolve, reject) {
-    resolve(places.reduce(function (cities, checkin) {
-      var city = _.get(checkin, 'venue.location.city');
-      var country = _.get(checkin, 'venue.location.country');
-
-      if (city && country) {
-        var place = city + ', ' + country;
-        var count = cities[place] || 0;
-        cities[place] = count + 1;
-      }
-
-      return cities;
-    }, {}));
-  });
-};
 
 /**
  * Morphs a 'Checkins by a user' response from Foursquare into
