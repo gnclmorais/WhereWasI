@@ -146,10 +146,11 @@ function getAllPlaces(accessToken, limit, sort) {
       return new Promise([firstChunk]);
     }
 
-    var nrRequests = Array.apply(null, Array(Math.floor(count / limit)));
-    var gets = [firstChunk].concat(nrRequests.map(function (val, idx) {
-      return createRequest(limit + limit * idx);
-    }));
+    var nrRequests = Math.floor(count / limit);
+    var gets = _.range(1, nrRequests).map(function (n) {
+      return createRequest(limit * n);
+    });
+    gets = [firstChunk].concat(gets);
 
     return Promise.all(gets);
   }).then(function (allCheckins) {
