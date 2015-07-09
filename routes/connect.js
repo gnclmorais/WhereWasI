@@ -50,21 +50,6 @@ router.get('/:service/callback', function (req, res, next) {
           res.status(200).json(user);
         })
         .catch(console.error);
-        // .then(function (checkins) {
-        //   var result = checkins.recent || checkins;
-
-        //   // Extract just the cities
-        //   result = result.reduce(function (acc, checkin) {
-        //     var city = _.get(checkin, 'venue.location.city');
-        //     var country = _.get(checkin, 'venue.location.country');
-
-        //     city && country && acc.push(city + ', ' + country);
-
-        //     return acc;
-        //   }, []);
-
-        //   res.send(result);
-        // });
       break;
 
     default:
@@ -93,9 +78,6 @@ function fsGetAccessToken(code) {
       resolve(accessToken);
     });
   });
-
-  //return fsAuth(code).catch(console.error);
-  //return fsAuth(code).then(fsGetCheckins).catch(console.error);
 }
 
 
