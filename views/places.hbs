@@ -15,11 +15,12 @@
 
         var markers = $.map(places, function (info, name) {
           return new google.maps.Marker({
-              position: new google.maps.LatLng(info.lat, info.lng)
+              position: new google.maps.LatLng(info.lat, info.lng),
+              map: map
           });
         });
 
-        mc = new MarkerClusterer(map, markers);
+        //mc = new MarkerClusterer(map, markers);
       },
       error: console.log
     });
