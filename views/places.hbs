@@ -41,12 +41,13 @@
             width: 131
           }
         ];
-      var mcOptions = {
-          styles: clusterStyles,
-          gridSize: 50
-      };
+        var mcOptions = {
+            styles: clusterStyles,
+            gridSize: 50
+        };
 
         mc = new MarkerClusterer(map, markers, mcOptions);
+        mc.fitMapToMarkers();
       },
       error: console.log
     });
@@ -76,7 +77,71 @@
     }
   };
 
+
+  /**
+   *  ___       ___         ___      ___ ___
+   *  `MMb     dMM'68b      `MM      `MM `MM
+   *   MMM.   ,PMM Y89       MM       MM  MM
+   *   M`Mb   d'MM ___   ____MM   ____MM  MM   ____
+   *   M YM. ,P MM `MM  6MMMMMM  6MMMMMM  MM  6MMMMb
+   *   M `Mb d' MM  MM 6M'  `MM 6M'  `MM  MM 6M'  `Mb
+   *   M  YM.P  MM  MM MM    MM MM    MM  MM MM    MM
+   *   M  `Mb'  MM  MM MM    MM MM    MM  MM MMMMMMMM
+   *   M   YP   MM  MM MM    MM MM    MM  MM MM
+   *   M   `'   MM  MM YM.  ,MM YM.  ,MM  MM YM    d9
+   *  _M_      _MM__MM_ YMMMMMM_ YMMMMMM__MM_ YMMMM9
+   */
+
   var headerClass = 'alpha-header';
+
+  var ClusterToggle = React.createClass({
+    getInitialState: function () {
+      return {
+        isSelected: true
+      };
+    },
+    handleClick: function () {
+      var state = this.state.isSelected;
+
+      this.setState({
+        isSelected: !state
+      });
+
+      console.log('State?', state ? null : map);
+      mc.setOptions({map: state ? null : map});
+    },
+    render: function () {
+      var classString = headerClass + '--toggle';
+
+      return (
+        <div className={classString}>
+          <span>Cluster</span>
+          <input type="checkbox" onClick={this.handleClick} checked={this.state.isSelected} />
+          <span>Singles</span>
+        </div>
+      );
+    }
+  });
+
+  React.render(
+    <ClusterToggle />,
+    document.getElementById('header-wrapper-center')
+  );
+
+
+/**
+ * ________
+ * `MMMMMMMb.
+ *  MM    `Mb             /       /
+ *  MM     MM   _____    /M      /M       _____   ___  __    __
+ *  MM    .M9  6MMMMMb  /MMMMM  /MMMMM   6MMMMMb  `MM 6MMb  6MMb
+ *  MMMMMMM(  6M'   `Mb  MM      MM     6M'   `Mb  MM69 `MM69 `Mb
+ *  MM    `Mb MM     MM  MM      MM     MM     MM  MM'   MM'   MM
+ *  MM     MM MM     MM  MM      MM     MM     MM  MM    MM    MM
+ *  MM     MM MM     MM  MM      MM     MM     MM  MM    MM    MM
+ *  MM    .M9 YM.   ,M9  YM.  ,  YM.  , YM.   ,M9  MM    MM    MM
+ * _MMMMMMM9'  YMMMMM9    YMMM9   YMMM9  YMMMMM9  _MM_  _MM_  _MM_
+ */
 
   var Avatar = React.createClass({
     render: function () {
@@ -143,5 +208,7 @@
 </script>
 
 <header id="alpha-header" class="alpha-header">
+  <div id="header-wrapper-left" class="alpha-header--left"></div>
+  <div id="header-wrapper-center" class="alpha-header--center"></div>
   <div id="header-wrapper-right" class="alpha-header--right"></div>
 </header>
