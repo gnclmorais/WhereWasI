@@ -15,12 +15,38 @@
 
         var markers = $.map(places, function (info, name) {
           return new google.maps.Marker({
-              position: new google.maps.LatLng(info.lat, info.lng),
-              map: map
+            icon: 'images/icons/marker_01.png',
+            position: new google.maps.LatLng(info.lat, info.lng)/*,
+            map: map*/
           });
         });
 
-        //mc = new MarkerClusterer(map, markers);
+        var clusterStyles = [
+          {
+            textColor: 'white',
+            url: 'images/icons/marker_02.png',
+            height: 51,
+            width: 51
+          },
+         {
+            textColor: 'white',
+            url: 'images/icons/marker_03.png',
+            height: 81,
+            width: 81
+          },
+         {
+            textColor: 'white',
+            url: 'images/icons/marker_04.png',
+            height: 131,
+            width: 131
+          }
+        ];
+      var mcOptions = {
+          styles: clusterStyles,
+          gridSize: 50
+      };
+
+        mc = new MarkerClusterer(map, markers, mcOptions);
       },
       error: console.log
     });
