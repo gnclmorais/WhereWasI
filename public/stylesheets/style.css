@@ -22,6 +22,10 @@ a {
   height: 3em;
   background: #fff;
 }
+.alpha-header--left {
+  height: 100%;
+  float: left;
+}
 .alpha-header--center {
   position: absolute;
   left: 50%;
@@ -32,6 +36,11 @@ a {
 }
 .alpha-header--account > * {
   float: left;
+}
+.alpha-header--logo {
+  height: 100%;
+  width: 3em;
+  background: #f00;
 }
 .alpha-header--avatar {
   height: 3em;

@@ -146,8 +146,6 @@ function getAllPlaces(accessToken, limit, sort) {
       return new Promise([firstChunk]);
     }
 
-    console.log('Count:', count, firstChunk.checkins.items[0]);
-
     var nrRequests = Math.floor(count / limit);
     var gets = _.range(1, nrRequests).map(function (n) {
       return createRequest(limit * n);

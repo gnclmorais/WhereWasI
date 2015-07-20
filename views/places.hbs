@@ -82,6 +82,48 @@
 
 
   /**
+   *  ____    ____                        ___
+   *  `MM'    `MM'                        `MM
+   *   MM      MM                          MM
+   *   MM      MM   ____      ___      ____MM   ____   ___  __
+   *   MM      MM  6MMMMb   6MMMMb    6MMMMMM  6MMMMb  `MM 6MM
+   *   MMMMMMMMMM 6M'  `Mb 8M'  `Mb  6M'  `MM 6M'  `Mb  MM69 "
+   *   MM      MM MM    MM     ,oMM  MM    MM MM    MM  MM'
+   *   MM      MM MMMMMMMM ,6MM9'MM  MM    MM MMMMMMMM  MM
+   *   MM      MM MM       MM'   MM  MM    MM MM        MM
+   *   MM      MM YM    d9 MM.  ,MM  YM.  ,MM YM    d9  MM
+   *  _MM_    _MM_ YMMMM9  `YMMM9'Yb. YMMMMMM_ YMMMM9  _MM_
+   **/
+
+  var headerClass = 'alpha-header';
+
+  var Logo = React.createClass({
+    handleClick: function () {
+      // TODO
+      // Reset zoom and center map
+
+      var defaultZoom = 3;
+      if (map.getZoom() !== defaultZoom) {
+        map.setZoom(defaultZoom);
+      }
+    },
+    render: function () {
+      var classString = headerClass + '--logo';
+
+      return (
+        <div className={classString} onClick={this.handleClick}>
+        </div>
+      );
+    }
+  });
+
+  React.render(
+    <Logo />,
+    document.getElementById('header-wrapper-left')
+  );
+
+
+  /**
    *  ___       ___         ___      ___ ___
    *  `MMb     dMM'68b      `MM      `MM `MM
    *   MMM.   ,PMM Y89       MM       MM  MM
@@ -94,8 +136,6 @@
    *   M   `'   MM  MM YM.  ,MM YM.  ,MM  MM YM    d9
    *  _M_      _MM__MM_ YMMMMMM_ YMMMMMM__MM_ YMMMM9
    */
-
-  var headerClass = 'alpha-header';
 /*
   var ClusterToggle = React.createClass({
     getInitialState: function () {
