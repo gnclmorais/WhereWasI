@@ -136,7 +136,7 @@ function getPlaces(accessToken, sort, limit, offset) {
 
 function getAllPlaces(accessToken, limit, sort) {
   limit = limit || 250;
-  sort = sort || 'oldestfirst';
+  sort = sort || 'newestfirst';
 
   var createRequest = getPlaces.bind(null, accessToken, sort, limit);
 
@@ -145,6 +145,8 @@ function getAllPlaces(accessToken, limit, sort) {
     if (count < limit) {
       return new Promise([firstChunk]);
     }
+
+    console.log('Count:', count, firstChunk.checkins.items[0]);
 
     var nrRequests = Math.floor(count / limit);
     var gets = _.range(1, nrRequests).map(function (n) {
