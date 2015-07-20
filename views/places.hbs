@@ -96,7 +96,7 @@
    */
 
   var headerClass = 'alpha-header';
-
+/*
   var ClusterToggle = React.createClass({
     getInitialState: function () {
       return {
@@ -129,7 +129,7 @@
     <ClusterToggle />,
     document.getElementById('header-wrapper-center')
   );
-
+*/
 
 /**
  * ________
@@ -165,19 +165,20 @@
       };
     },
     handleClick: function () {
-      var isOpen = this.state.isOpen;
+      var isOpen = !this.state.isOpen;
 
       this.setState({
-        isOpen: !isOpen
+        isOpen: isOpen
       });
 
-      $('#world-map-canvas').css('left', isOpen ? '-100px' : '0');
+      $('#world-map-canvas').css('left', isOpen ? '-300px' : '0');
     },
     render: function () {
       var classString = headerClass + '--menu';
 
       return (
         <div className={classString} onClick={this.handleClick}>
+          <i className="fa fa-bars"></i>
         </div>
       );
     }

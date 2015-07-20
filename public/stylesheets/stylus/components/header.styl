@@ -33,26 +33,9 @@ $menu-color = lightgrey
       margin $avatar-margin
 
   &--menu
-    $menu-fifth = $avatar-height / 5
-    height $menu-fifth
-    width $avatar-height
-    background $menu-color
-    margin ($menu-fifth * 2 + $avatar-margin) 0
-    margin-right $avatar-margin
+    margin-right .2em
     position relative
-    border-radius 2px
     cursor pointer
-    &:before
-    &:after
-      display block
-      content ''
-      height $menu-fifth
-      width 100%
-      position absolute
-      left 0
-      background @background
-      border-radius @border-radius
-    &:before
-      top -2 * $menu-fifth
-    &:after
-      bottom -2 * $menu-fifth
+    font-size 2.5em
+    -webkit-user-select none
+    user-select none

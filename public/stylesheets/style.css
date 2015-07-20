@@ -48,31 +48,12 @@ a {
   margin: 0.5em;
 }
 .alpha-header--menu {
-  height: 0.4em;
-  width: 2em;
-  background: #d3d3d3;
-  margin: 1.3em 0;
-  margin-right: 0.5em;
+  margin-right: 0.2em;
   position: relative;
-  border-radius: 2px;
   cursor: pointer;
-}
-.alpha-header--menu:before,
-.alpha-header--menu:after {
-  display: block;
-  content: '';
-  height: 0.4em;
-  width: 100%;
-  position: absolute;
-  left: 0;
-  background: #d3d3d3;
-  border-radius: 2px;
-}
-.alpha-header--menu:before {
-  top: -0.8em;
-}
-.alpha-header--menu:after {
-  bottom: -0.8em;
+  font-size: 2.5em;
+  -webkit-user-select: none;
+  user-select: none;
 }
 .world-map {
   position: fixed;
@@ -93,7 +74,8 @@ a {
 /* Will be set by the Maps API anyway */
   width: 100%;
   height: 100%;
-  transition: 0.2s;
+  left: 0;
+  transition: left 0.2s;
 }
 .index {
   height: 33%;
