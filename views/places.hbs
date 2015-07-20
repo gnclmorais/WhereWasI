@@ -24,18 +24,21 @@
         var clusterStyles = [
           {
             textColor: 'white',
+            textSize: 13,
             url: 'images/icons/marker_02.png',
             height: 51,
             width: 51
           },
-         {
+          {
             textColor: 'white',
+            textSize: 13,
             url: 'images/icons/marker_03.png',
             height: 81,
             width: 81
           },
-         {
+          {
             textColor: 'white',
+            textSize: 13,
             url: 'images/icons/marker_04.png',
             height: 131,
             width: 131
@@ -107,7 +110,6 @@
         isSelected: !state
       });
 
-      console.log('State?', state ? null : map);
       mc.setOptions({map: state ? null : map});
     },
     render: function () {
@@ -157,11 +159,25 @@
   });
 
   var Menu = React.createClass({
+    getInitialState: function () {
+      return {
+        isOpen: false
+      };
+    },
+    handleClick: function () {
+      var isOpen = this.state.isOpen;
+
+      this.setState({
+        isOpen: !isOpen
+      });
+
+      $('#world-map-canvas').css('left', isOpen ? '-100px' : '0');
+    },
     render: function () {
       var classString = headerClass + '--menu';
 
       return (
-        <div className={classString}>
+        <div className={classString} onClick={this.handleClick}>
         </div>
       );
     }
