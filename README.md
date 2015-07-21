@@ -1,6 +1,9 @@
 # WhereWasI
 Simple map showing me all checked in cities.
 
+## Todo
++ [ ] Database integration
+
 ## Inspiration
 + [Map Data Visualisation](https://dribbble.com/shots/687936-Map-Data-Visualisation)
 + [Preview Map](https://dribbble.com/shots/1558803-Preview-Map)
