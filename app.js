@@ -7,6 +7,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// Session
+var session = require('client-sessions');
+
+// Database
+var mongo = require('mongodb');
+var monk = require('monk');
+var db = monk('localhost:27017/wherewasi');
+
+// Routes
 var routes = require('./routes/index');
 var connect = require('./routes/connect');
 var places = require('./routes/places');
@@ -29,6 +38,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 // register path to partials
 hbs.registerPartials(__dirname + '/views/partials');
 
+// Make our db & session accessible to our router
+app.use(function (req, res, next) {
+  req.session = session;
+  req.db = db;
+  next();
+});
+
+// Setup the routes
 app.use('/', routes);
 app.use('/connect', connect);
 app.use('/places', places);
